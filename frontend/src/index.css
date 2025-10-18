@@ -1,0 +1,84 @@
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  background-color: hwb(312 47% 20%); 
+}
+
+
+
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
+    monospace;
+}
+
+.navbar-brand {
+  font-weight: bold;
+}
+
+
+.card {
+  
+  box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15); 
+  
+  border-radius: 0.5rem; 
+  
+  border: none; 
+}
+
+
+.btn-primary {
+  background-color: #4b0082; 
+  border-color: #4b0082;
+  transition: background-color 0.3s ease;
+}
+
+.btn-primary:hover {
+  background-color: #3c006b;
+  border-color: #3c006b;
+}
+
+.table th {
+  /* Tamna siva pozadina */
+  background-color: #343a40; 
+  /* Beli tekst */
+  color: white; 
+  border-top: none;
+  font-weight: 600; /* Malo deblji font */
+}
+
+.badge {
+  font-size: 0.75em;
+}
+
+.status-active {
+  background-color: #198754;
+}
+
+.status-inactive {
+  background-color: #6c757d;
+}
+
+.status-hired {
+  background-color: #0d6efd;
+}
+
+.status-rejected {
+  background-color: #dc3545;
+}
+
+.interview-scheduled {
+  background-color: #ffc107;
+  color: #000;
+}
+
+.interview-completed {
+  background-color: #198754;
+}
+
+.interview-canceled {
+  background-color: #dc3545;
+}
