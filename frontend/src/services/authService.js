@@ -56,15 +56,7 @@ class AuthService {
   }
 
   isAuthenticated() {
-    const token = localStorage.getItem('jwtToken');
-    
-    // Proveravamo da li token uopšte postoji, da nije string "undefined" ili "null", 
-    // i da nije samo prazan string.
-    if (token && token !== 'undefined' && token !== 'null' && token.length > 0) {
-      return true;
-    }
-    
-    return false;
+    return !!localStorage.getItem('jwtToken');
   }
 
   getToken() {
