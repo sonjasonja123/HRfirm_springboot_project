@@ -10,6 +10,7 @@ import PositionList from './components/PositionList';
 import CandidateList from './components/CandidateList';
 import InterviewList from './components/InterviewList';
 import Dashboard from './components/Dashboard';
+import './App.css';
 
 function App() {
   return (

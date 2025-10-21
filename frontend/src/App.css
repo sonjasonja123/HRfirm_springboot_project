@@ -1,33 +1,143 @@
+/* General Body Styles */
+body {
+  margin: 0;
+  font-family: 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  background-color: #f4f7fc; /* Light grey-blue background */
+  color: #5a5a5a;
+}
+
+/* App Container */
 .App {
   text-align: center;
 }
 
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
+/* Dashboard Header */
+.dashboard-header {
+  color: #2c3e50;
+  font-weight: 600;
+  border-bottom: 2px solid #e0e0e0;
+  padding-bottom: 15px;
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
+/* Stat Card Styles */
+.stat-card {
+  background-color: #ffffff;
+  border: 1px solid #e3e6f0;
+  border-radius: 0.75rem;
+  box-shadow: 0 0.15rem 1.75rem 0 rgba(58, 59, 69, 0.1);
+  transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+  margin-bottom: 1.5rem;
 }
 
-.App-header {
-  background-color: #282c34;
-  padding: 20px;
-  color: white;
+.stat-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 0.3rem 2rem 0 rgba(58, 59, 69, 0.15);
 }
 
-.App-link {
-  color: #61dafb;
+.stat-card .card-body {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1.5rem;
 }
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+.stat-card .card-text-section {
+  text-align: left;
+}
+
+.stat-card .card-title {
+  font-size: 2rem;
+  font-weight: 700;
+  color: #343a40;
+  margin-bottom: 0.25rem;
+}
+
+.stat-card .card-text {
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: #858796;
+  text-transform: uppercase;
+}
+
+.stat-card .card-icon {
+  font-size: 2.5rem;
+  color: #dddfeb;
+}
+
+/* Recent Interviews Card */
+.recent-interviews-card {
+  background-color: #ffffff;
+  border: 1px solid #e3e6f0;
+  border-radius: 0.75rem;
+  box-shadow: 0 0.15rem 1.75rem 0 rgba(58, 59, 69, 0.1);
+}
+
+.recent-interviews-card .card-header {
+  background-color: #f8f9fc;
+  border-bottom: 1px solid #e3e6f0;
+  font-weight: 600;
+  color: #4e73df;
+  border-top-left-radius: 0.75rem;
+  border-top-right-radius: 0.75rem;
+}
+
+/* Table Styles */
+.table {
+  color: #5a5a5a;
+}
+
+.table thead th {
+  background-color: #f8f9fc;
+  color: #858796;
+  border: none;
+  font-weight: 600;
+  text-transform: uppercase;
+  font-size: 0.8rem;
+  letter-spacing: 0.05rem;
+}
+
+.table tbody tr {
+  border-bottom: 1px solid #e3e6f0;
+}
+
+.table tbody tr:last-of-type {
+  border-bottom: none;
+}
+
+.table tbody tr:hover {
+  background-color: #f8f9fc;
+}
+
+/* Badge Styles */
+.badge {
+  padding: 0.5em 0.9em;
+  font-size: 0.75em;
+  font-weight: 600;
+  border-radius: 0.35rem;
+}
+
+.status-scheduled {
+  background-color: #f6c23e;
+  color: #fff;
+}
+
+.status-completed {
+  background-color: #1cc88a;
+  color: #fff;
+}
+
+.status-canceled {
+  background-color: #e74a3b;
+  color: #fff;
+}
+
+/* Chart Container */
+.chart-container {
+  padding: 1.5rem;
+  background-color: #ffffff;
+  border: 1px solid #e3e6f0;
+  border-radius: 0.75rem;
+  box-shadow: 0 0.15rem 1.75rem 0 rgba(58, 59, 69, 0.1);
 }

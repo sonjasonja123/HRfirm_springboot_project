@@ -176,8 +176,8 @@ const CandidateList = () => {
                 <tr key={candidate.idCandidate}>
                   <td>{candidate.name}</td>
                   <td>{candidate.surname}</td>
-                  <td>{candidate.email}</td> {/* DODATO */}
-                  <td>{candidate.phone}</td> {/* DODATO */}
+                  <td>{candidate.email}</td>
+                  <td>{candidate.phone}</td>
                   <td>{getStatusBadge(candidate.status)}</td>
                   <td>{candidate.interviews?.length || 0}</td>
                   <td>
@@ -189,6 +189,7 @@ const CandidateList = () => {
                     >
                       Edit
                     </Button>
+
                     <div className="btn-group" role="group">
                       <Button
                         variant="outline-success"
@@ -199,6 +200,7 @@ const CandidateList = () => {
                       >
                         Hire
                       </Button>
+
                       <Button
                         variant="outline-danger"
                         size="sm"
@@ -208,6 +210,7 @@ const CandidateList = () => {
                       >
                         Reject
                       </Button>
+
                       <Button
                         variant="outline-secondary"
                         size="sm"
@@ -217,6 +220,7 @@ const CandidateList = () => {
                         Deactivate
                       </Button>
                     </div>
+
                     <Button
                       variant="outline-danger"
                       size="sm"
