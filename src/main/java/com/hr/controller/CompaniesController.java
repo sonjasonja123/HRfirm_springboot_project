@@ -1,7 +1,6 @@
 package com.hr.controller;
 
 import com.hr.model.Company;
-import com.hr.model.Position;
 import com.hr.service.CompanyService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -10,71 +9,16 @@ import org.springframework.web.bind.annotation.*;
 
 import jakarta.validation.Valid;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 
-@RestController
-@RequestMapping("/api/company")
-@CrossOrigin(origins = "http://localhost:3000")
-public class CompanyController {
-
-    @Autowired
-    private CompanyService companyService;
-
-    @PostMapping("/login")
-    public ResponseEntity<Company> login(@RequestBody Map<String,String> body){
-        return companyService.login(body.get("username"), body.get("password"))
-                .map(ResponseEntity::ok)
-                .orElse(ResponseEntity.status(HttpStatus.UNAUTHORIZED).build());
-    }
-
-    @PostMapping("/postPosition")
-    public ResponseEntity<Position> postPosition(@RequestBody Map<String,String> body){
-        Company company = companyService.login(body.get("username"), body.get("password"))
-                .orElseThrow(() -> new RuntimeException("Invalid company"));
-        Position position = companyService.postPosition(company, body.get("title"), body.get("description"));
-        return ResponseEntity.ok(position);
-    }
-
-    @GetMapping("/positions")
-    public ResponseEntity<List<Position>> getCompanyPositions(@RequestParam String username, @RequestParam String password){
-        Company company = companyService.login(username, password)
-                .orElseThrow(() -> new RuntimeException("Invalid company"));
-        List<Position> positions = companyService.getMyPositions(company);
-        return ResponseEntity.ok(positions);
-    }
-
-    @PutMapping("/positions/{id}")
-    public ResponseEntity<Position> updatePosition(@PathVariable Long id, @RequestBody Map<String,String> body){
-        try {
-            Position position = companyService.updatePosition(id, body.get("title"), body.get("description"));
-            return ResponseEntity.ok(position);
-        } catch (RuntimeException e) {
-            return ResponseEntity.notFound().build();
-        }
-    }
-    
-    // Endpoint-i za Worker (HR) pristup kompanijama
-    @GetMapping("/all")
-    public ResponseEntity<List<Company>> getAllCompanies() {
-        List<Company> companies = companyService.getAllCompanies();
-        return ResponseEntity.ok(companies);
-    }
-}
-
-
-
-
-
-
-
-
-
-/*
+/**
+ * Controller za Worker (HR) pristup kompanijama
+ * Ruta: /api/companies (sa 's' na kraju)
+ */
 @RestController
 @RequestMapping("/api/companies")
 @CrossOrigin(origins = "http://localhost:3000")
-public class CompanyController {
+public class CompaniesController {
     
     @Autowired
     private CompanyService companyService;
@@ -136,4 +80,4 @@ public class CompanyController {
         return ResponseEntity.ok(companies);
     }
 }
-*/
+

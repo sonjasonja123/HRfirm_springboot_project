@@ -12,12 +12,12 @@ import java.util.Optional;
 @Repository
 public interface PositionRepository extends JpaRepository<Position, Long> {
     
+    @Query("SELECT p FROM Position p WHERE p.company.idCompany = :companyId")
+    List<Position> findByCompanyId(@Param("companyId") Long companyId);
+    
     List<Position> findByOpenTrue();
     
     List<Position> findByOpenFalse();
-    
-    @Query("SELECT p FROM Position p WHERE p.company.idCompany = :companyId")
-    List<Position> findByCompanyId(@Param("companyId") Long companyId);
     
     @Query("SELECT p FROM Position p WHERE p.name LIKE %:name%")
     List<Position> findByNameContaining(@Param("name") String name);

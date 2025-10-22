@@ -1,8 +1,11 @@
 package com.hr.service;
 
 import com.hr.model.Company;
+import com.hr.model.Position;
 import com.hr.repository.CompanyRepository;
+import com.hr.repository.PositionRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -15,6 +18,12 @@ public class CompanyService {
     
     @Autowired
     private CompanyRepository companyRepository;
+    
+    @Autowired
+    private PositionRepository positionRepository;
+    
+    @Autowired
+    private PasswordEncoder passwordEncoder;
     
     public List<Company> getAllCompanies() {
         return companyRepository.findAll();
@@ -57,5 +66,35 @@ public class CompanyService {
     
     public List<Company> getCompaniesByIndustry(String industry) {
         return companyRepository.findByIndustry(industry);
+    }
+
+    // Login methods for company
+    public Optional<Company> login(String username, String password) {
+        return companyRepository.findByUsername(username)
+                .filter(c -> passwordEncoder.matches(password, c.getPassword()));
+    }
+
+    // Position management methods
+    public Position postPosition(Company company, String title, String description) {
+        Position position = new Position();
+        position.setName(title);
+        position.setDetails(description);
+        position.setCompany(company);
+        return positionRepository.save(position);
+    }
+
+    public List<Position> getMyPositions(Company company) {
+        return positionRepository.findByCompanyId(company.getIdCompany());
+    }
+    
+    public Position updatePosition(Long positionId, String title, String description) {
+        Optional<Position> optionalPosition = positionRepository.findById(positionId);
+        if (optionalPosition.isPresent()) {
+            Position position = optionalPosition.get();
+            position.setName(title);
+            position.setDetails(description);
+            return positionRepository.save(position);
+        }
+        throw new RuntimeException("Position not found with id: " + positionId);
     }
 }

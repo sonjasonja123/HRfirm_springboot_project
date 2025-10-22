@@ -10,6 +10,7 @@ import org.springframework.stereotype.Component;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.Optional;
 
 @Component
 public class DataInitializer implements CommandLineRunner {
@@ -57,25 +58,62 @@ public class DataInitializer implements CommandLineRunner {
             System.out.println("HR user created: username=hr, password=hr123");
         }
 
-        // Check if sample data already exists
-        if (companyRepository.count() > 0) {
-            return;
+        if (userRepository.findByUsername("worker1").isEmpty()) {
+            User worker = new User();
+            worker.setName("Petar");
+            worker.setSurname("Petrovic");
+            worker.setUsername("worker1");
+            worker.setPassword(passwordEncoder.encode("worker123"));
+            worker.setRole("USER");
+            userRepository.save(worker);
+            System.out.println("Worker user created: username=worker1, password=worker123");
         }
 
-        // Create sample companies
-        Company company1 = new Company();
-        company1.setName("Tech Solutions Inc.");
-        company1.setIndustry("Technology");
-        company1.setPib("12345678");
-        company1.setContact("contact@techsolutions.com");
-        company1 = companyRepository.save(company1);
+        // Create or update sample companies with credentials
+        Optional<Company> existingTechCompany = companyRepository.findByName("Tech Solutions Inc.");
+        Company company1;
+        if (existingTechCompany.isPresent()) {
+            company1 = existingTechCompany.get();
+            company1.setUsername("techsolutions");
+            company1.setPassword(passwordEncoder.encode("tech123"));
+            company1 = companyRepository.save(company1);
+            System.out.println("Company UPDATED with credentials: username=techsolutions, password=tech123");
+        } else {
+            company1 = new Company();
+            company1.setName("Tech Solutions Inc.");
+            company1.setIndustry("Technology");
+            company1.setPib("12345678");
+            company1.setContact("contact@techsolutions.com");
+            company1.setUsername("techsolutions");
+            company1.setPassword(passwordEncoder.encode("tech123"));
+            company1 = companyRepository.save(company1);
+            System.out.println("Company CREATED: username=techsolutions, password=tech123");
+        }
 
-        Company company2 = new Company();
-        company2.setName("Finance Corp");
-        company2.setIndustry("Finance");
-        company2.setPib("87654321");
-        company2.setContact("hr@financecorp.com");
-        company2 = companyRepository.save(company2);
+        Optional<Company> existingFinanceCompany = companyRepository.findByName("Finance Corp");
+        Company company2;
+        if (existingFinanceCompany.isPresent()) {
+            company2 = existingFinanceCompany.get();
+            company2.setUsername("financecorp");
+            company2.setPassword(passwordEncoder.encode("finance123"));
+            company2 = companyRepository.save(company2);
+            System.out.println("Company UPDATED with credentials: username=financecorp, password=finance123");
+        } else {
+            company2 = new Company();
+            company2.setName("Finance Corp");
+            company2.setIndustry("Finance");
+            company2.setPib("87654321");
+            company2.setContact("hr@financecorp.com");
+            company2.setUsername("financecorp");
+            company2.setPassword(passwordEncoder.encode("finance123"));
+            company2 = companyRepository.save(company2);
+            System.out.println("Company CREATED: username=financecorp, password=finance123");
+        }
+        
+        // Check if other sample data already exists (pozicije, kandidati, itd)
+        if (positionRepository.count() > 0) {
+            return;
+        }
 
         // Create sample positions
         Position position1 = new Position();

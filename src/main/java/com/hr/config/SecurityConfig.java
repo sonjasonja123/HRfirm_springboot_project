@@ -41,13 +41,11 @@ public class SecurityConfig {
             .cors(cors -> cors.configurationSource(corsConfigurationSource()))
             .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
             .authorizeHttpRequests(authz -> authz
-                .requestMatchers("/api/auth/**").permitAll()
-                .requestMatchers("/h2-console/**").permitAll()
-                .requestMatchers("/api/**").authenticated()
-                .anyRequest().denyAll()
+                .anyRequest().permitAll()  // DOZVOLI SVE ZAHTEVE
             )
-            .headers(headers -> headers.frameOptions().disable())
-            .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
+            .headers(headers -> headers.frameOptions().disable());
+            // Privremeno ISKLJUČUJEM JWT filter
+            // .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
 }

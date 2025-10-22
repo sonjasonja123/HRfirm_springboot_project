@@ -32,30 +32,35 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                                     HttpServletResponse response,
                                     FilterChain filterChain) throws ServletException, IOException {
 
-        // 1. Dobavljanje JWT-a iz HTTP zaglavlja zahteva
-        String token = getJwtFromRequest(request);
+        try {
+            // 1. Dobavljanje JWT-a iz HTTP zaglavlja zahteva
+            String token = getJwtFromRequest(request);
 
-        // 2. Validacija tokena
-        if (StringUtils.hasText(token) && tokenProvider.validateToken(token)) {
-            
-            // 3. Dobijanje korisničkog imena iz tokena
-            String username = tokenProvider.getUsernameFromJWT(token);
+            // 2. Validacija tokena
+            if (StringUtils.hasText(token) && tokenProvider.validateToken(token)) {
+                
+                // 3. Dobijanje korisničkog imena iz tokena
+                String username = tokenProvider.getUsernameFromJWT(token);
 
-            // 4. Učitavanje korisničkih podataka (roles, authorities)
-            UserDetails userDetails = customUserDetailsService.loadUserByUsername(username);
+                // 4. Učitavanje korisničkih podataka (roles, authorities)
+                UserDetails userDetails = customUserDetailsService.loadUserByUsername(username);
 
-            // 5. Kreiranje Spring Security Authentication objekta
-            UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(
-                    userDetails,
-                    null,
-                    userDetails.getAuthorities()
-            );
-            
-            // 6. Postavljanje detalja zahteva
-            authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
+                // 5. Kreiranje Spring Security Authentication objekta
+                UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(
+                        userDetails,
+                        null,
+                        userDetails.getAuthorities()
+                );
+                
+                // 6. Postavljanje detalja zahteva
+                authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
 
-            // 7. Postavljanje korisnika u Security Context za trenutni zahtev
-            SecurityContextHolder.getContext().setAuthentication(authentication);
+                // 7. Postavljanje korisnika u Security Context za trenutni zahtev
+                SecurityContextHolder.getContext().setAuthentication(authentication);
+            }
+        } catch (Exception ex) {
+            // Ako dođe do greške u JWT procesiranju, samo nastavi bez autentifikacije
+            // (SecurityConfig će odlučiti da li je endpoint permitAll ili ne)
         }
 
         // Nastavi lanac filtera (idi na sledeći filter ili na kontroler)
