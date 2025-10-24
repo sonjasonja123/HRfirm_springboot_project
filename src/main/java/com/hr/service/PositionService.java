@@ -38,6 +38,8 @@ public class PositionService {
     }
     
     public Position createPosition(Position position) {
+        // Automatically update status based on dates if dates are provided
+        position.updateOpenStatusByDates();
         return positionRepository.save(position);
     }
     
@@ -45,6 +47,8 @@ public class PositionService {
         Optional<Company> company = companyService.getCompanyById(companyId);
         if (company.isPresent()) {
             position.setCompany(company.get());
+            // Automatically update status based on dates if dates are provided
+            position.updateOpenStatusByDates();
             return positionRepository.save(position);
         }
         throw new RuntimeException("Company not found with id: " + companyId);
@@ -57,6 +61,10 @@ public class PositionService {
             position.setName(positionDetails.getName());
             position.setDetails(positionDetails.getDetails());
             position.setOpen(positionDetails.getOpen());
+            position.setDateFrom(positionDetails.getDateFrom());
+            position.setDateTo(positionDetails.getDateTo());
+            // Automatically update status based on dates if dates are provided
+            position.updateOpenStatusByDates();
             return positionRepository.save(position);
         }
         throw new RuntimeException("Position not found with id: " + id);
@@ -100,5 +108,13 @@ public class PositionService {
             return positionRepository.save(position);
         }
         throw new RuntimeException("Position not found with id: " + id);
+    }
+    
+    public void updateAllPositionStatusesByDates() {
+        List<Position> allPositions = positionRepository.findAll();
+        for (Position position : allPositions) {
+            position.updateOpenStatusByDates();
+            positionRepository.save(position);
+        }
     }
 }

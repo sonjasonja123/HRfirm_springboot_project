@@ -17,7 +17,7 @@ const CandidateList = () => {
     phone: ''
   });
 
-  const statusOptions = ['All', 'Active', 'Hired', 'Rejected', 'Inactive'];
+  const statusOptions = ['All', 'Active', 'Hired', 'Rejected'];
 
   useEffect(() => {
     loadCandidates();
@@ -66,9 +66,9 @@ const CandidateList = () => {
     setFormData({
       name: candidate.name,
       surname: candidate.surname,
-      status: candidate.status,
-      email: candidate.email || '', // Koristi prazan string ako je null
-      phone: candidate.phone || ''
+      status: candidate.status, // Status ostaje isti, ali ne može se editovati
+      email: candidate.email || '',
+      phone: candidate.phone || ''
     });
     setShowModal(true);
   };
@@ -86,16 +86,17 @@ const CandidateList = () => {
     }
   };
 
-  const handleStatusChange = async (candidate, newStatus) => {
-    try {
-      await candidateAPI.updateStatus(candidate.idCandidate, newStatus);
-      toast.success('Candidate status updated successfully');
-      loadCandidates();
-    } catch (error) {
-      toast.error('Error updating candidate status');
-      console.error('Error updating candidate status:', error);
-    }
-  };
+  // UKLONJENO: Status se ne menja direktno, već iz Interview kartice
+  // const handleStatusChange = async (candidate, newStatus) => {
+  //   try {
+  //     await candidateAPI.updateStatus(candidate.idCandidate, newStatus);
+  //     toast.success('Candidate status updated successfully');
+  //     loadCandidates();
+  //   } catch (error) {
+  //     toast.error('Error updating candidate status');
+  //     console.error('Error updating candidate status:', error);
+  //   }
+  // };
 
   const handleCloseModal = () => {
     setShowModal(false);
@@ -107,8 +108,7 @@ const CandidateList = () => {
     const statusClasses = {
       'Active': 'status-active',
       'Hired': 'status-hired',
-      'Rejected': 'status-rejected',
-      'Inactive': 'status-inactive'
+      'Rejected': 'status-rejected'
     };
     return (
       <Badge className={statusClasses[status] || 'bg-secondary'}>
@@ -190,41 +190,9 @@ const CandidateList = () => {
                       Edit
                     </Button>
 
-                    <div className="btn-group" role="group">
-                      <Button
-                        variant="outline-success"
-                        size="sm"
-                        className="me-1"
-                        onClick={() => handleStatusChange(candidate, 'Hired')}
-                        disabled={candidate.status === 'Hired'}
-                      >
-                        Hire
-                      </Button>
-
-                      <Button
-                        variant="outline-danger"
-                        size="sm"
-                        className="me-1"
-                        onClick={() => handleStatusChange(candidate, 'Rejected')}
-                        disabled={candidate.status === 'Rejected'}
-                      >
-                        Reject
-                      </Button>
-
-                      <Button
-                        variant="outline-secondary"
-                        size="sm"
-                        onClick={() => handleStatusChange(candidate, 'Inactive')}
-                        disabled={candidate.status === 'Inactive'}
-                      >
-                        Deactivate
-                      </Button>
-                    </div>
-
                     <Button
                       variant="outline-danger"
                       size="sm"
-                      className="ms-2"
                       onClick={() => handleDelete(candidate.idCandidate)}
                     >
                       Delete
@@ -271,44 +239,62 @@ const CandidateList = () => {
                   </Form.Group>
                 </Col>
               </Row>
-              <Row>
-                <Col md={6}>
-                  <Form.Group className="mb-3">
-                    <Form.Label>Email</Form.Label>
-                    <Form.Control
-                      type="email"
-                      name="email"
-                      value={formData.email}
-                      onChange={handleInputChange}
-                    />
-                  </Form.Group>
-                </Col>
-                <Col md={6}>
-                  <Form.Group className="mb-3">
-                    <Form.Label>Phone</Form.Label>
-                    <Form.Control
-                      type="text"
-                      name="phone"
-                      value={formData.phone}
-                      onChange={handleInputChange}
+            <Row>
+              <Col md={6}>
+                <Form.Group className="mb-3">
+                  <Form.Label>Email</Form.Label>
+                  <Form.Control
+                    type="email"
+                    name="email"
+                    value={formData.email}
+                    onChange={handleInputChange}
+                  />
+                </Form.Group>
+              </Col>
+              <Col md={6}>
+                <Form.Group className="mb-3">
+                  <Form.Label>Phone</Form.Label>
+                  <Form.Control
+                    type="tel"
+                    name="phone"
+                    value={formData.phone}
+                    onChange={handleInputChange}
+                    placeholder="+381 64 123 4567"
                   />
                 </Form.Group>
               </Col>
             </Row>
             
-            <Form.Group className="mb-3">
-              <Form.Label>Status</Form.Label>
-              <Form.Select
-                name="status"
-                value={formData.status}
-                onChange={handleInputChange}
-              >
-                <option value="Active">Active</option>
-                <option value="Hired">Hired</option>
-                <option value="Rejected">Rejected</option>
-                <option value="Inactive">Inactive</option>
-              </Form.Select>
-            </Form.Group>
+            {/* STATUS SE NE EDITUJE OVDE - MENJA SE SAMO IZ INTERVIEW KARTICE */}
+            {!editingCandidate && (
+              <Form.Group className="mb-3">
+                <Form.Label>Status</Form.Label>
+                <Form.Control
+                  type="text"
+                  value="Active"
+                  disabled
+                  readOnly
+                />
+                <Form.Text className="text-muted">
+                  Svi novi kandidati počinju sa statusom "Active". Status se menja iz Interview kartice.
+                </Form.Text>
+              </Form.Group>
+            )}
+            
+            {editingCandidate && (
+              <Form.Group className="mb-3">
+                <Form.Label>Status</Form.Label>
+                <Form.Control
+                  type="text"
+                  value={formData.status}
+                  disabled
+                  readOnly
+                />
+                <Form.Text className="text-muted">
+                  Status se menja samo iz Interview kartice pomoću Hire/Reject dugmadi.
+                </Form.Text>
+              </Form.Group>
+            )}
           </Modal.Body>
           <Modal.Footer>
             <Button variant="secondary" onClick={handleCloseModal}>

@@ -1,6 +1,7 @@
 package com.hr.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
@@ -30,9 +31,9 @@ public class Position {
     @Column(name = "is_open", nullable = false)
     private Boolean open = true;
     
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "id_company", nullable = false)
-    @JsonIgnore
+    @JsonIgnoreProperties({"positions", "username", "password"})
     private Company company;
     
     @OneToMany(mappedBy = "position", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
@@ -129,5 +130,21 @@ public class Position {
     public void removeInterview(Interview interview) {
         interviews.remove(interview);
         interview.setPosition(null);
+    }
+    
+    // Method to check if position should be open based on dates
+    public boolean isOpenByDate() {
+        if (dateFrom == null || dateTo == null) {
+            return open; // If no dates set, use manual open status
+        }
+        LocalDate now = LocalDate.now();
+        return !now.isBefore(dateFrom) && !now.isAfter(dateTo);
+    }
+    
+    // Method to automatically update open status based on dates
+    public void updateOpenStatusByDates() {
+        if (dateFrom != null && dateTo != null) {
+            this.open = isOpenByDate();
+        }
     }
 }

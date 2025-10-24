@@ -11,7 +11,9 @@ const CompanyDashboard = () => {
     const [editingPosition, setEditingPosition] = useState(null);
     const [formData, setFormData] = useState({
         title: '',
-        description: ''
+        description: '',
+        dateFrom: '',
+        dateTo: ''
     });
     const [companyInfo, setCompanyInfo] = useState(null);
 
@@ -43,11 +45,13 @@ const CompanyDashboard = () => {
             setEditingPosition(position);
             setFormData({
                 title: position.name,
-                description: position.details
+                description: position.details,
+                dateFrom: position.dateFrom || '',
+                dateTo: position.dateTo || ''
             });
         } else {
             setEditingPosition(null);
-            setFormData({ title: '', description: '' });
+            setFormData({ title: '', description: '', dateFrom: '', dateTo: '' });
         }
         setShowModal(true);
     };
@@ -55,7 +59,7 @@ const CompanyDashboard = () => {
     const handleCloseModal = () => {
         setShowModal(false);
         setEditingPosition(null);
-        setFormData({ title: '', description: '' });
+        setFormData({ title: '', description: '', dateFrom: '', dateTo: '' });
     };
 
     const handleSubmit = async (e) => {
@@ -70,7 +74,9 @@ const CompanyDashboard = () => {
                     username: user.username,
                     password: user.password,
                     title: formData.title,
-                    description: formData.description
+                    description: formData.description,
+                    dateFrom: formData.dateFrom,
+                    dateTo: formData.dateTo
                 });
                 toast.success('Pozicija uspešno kreirana!');
             }
@@ -232,6 +238,35 @@ const CompanyDashboard = () => {
                                     required
                                 />
                             </Form.Group>
+
+                            <Row>
+                                <Col md={6}>
+                                    <Form.Group className="mb-3">
+                                        <Form.Label>Datum od</Form.Label>
+                                        <Form.Control
+                                            type="date"
+                                            value={formData.dateFrom}
+                                            onChange={(e) => setFormData({ ...formData, dateFrom: e.target.value })}
+                                        />
+                                        <Form.Text className="text-muted">
+                                            Pozicija će biti otvorena od ovog datuma
+                                        </Form.Text>
+                                    </Form.Group>
+                                </Col>
+                                <Col md={6}>
+                                    <Form.Group className="mb-3">
+                                        <Form.Label>Datum do</Form.Label>
+                                        <Form.Control
+                                            type="date"
+                                            value={formData.dateTo}
+                                            onChange={(e) => setFormData({ ...formData, dateTo: e.target.value })}
+                                        />
+                                        <Form.Text className="text-muted">
+                                            Pozicija će biti automatski zatvorena nakon ovog datuma
+                                        </Form.Text>
+                                    </Form.Group>
+                                </Col>
+                            </Row>
 
                             <div className="d-flex justify-content-end gap-2">
                                 <Button variant="secondary" onClick={handleCloseModal}>

@@ -9,6 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import jakarta.validation.Valid;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -32,7 +33,16 @@ public class CompanyController {
     public ResponseEntity<Position> postPosition(@RequestBody Map<String,String> body){
         Company company = companyService.login(body.get("username"), body.get("password"))
                 .orElseThrow(() -> new RuntimeException("Invalid company"));
-        Position position = companyService.postPosition(company, body.get("title"), body.get("description"));
+        
+        // Parse dates if provided
+        LocalDate dateFrom = body.get("dateFrom") != null && !body.get("dateFrom").isEmpty() 
+            ? LocalDate.parse(body.get("dateFrom")) 
+            : null;
+        LocalDate dateTo = body.get("dateTo") != null && !body.get("dateTo").isEmpty() 
+            ? LocalDate.parse(body.get("dateTo")) 
+            : null;
+        
+        Position position = companyService.postPosition(company, body.get("title"), body.get("description"), dateFrom, dateTo);
         return ResponseEntity.ok(position);
     }
 
@@ -47,7 +57,15 @@ public class CompanyController {
     @PutMapping("/positions/{id}")
     public ResponseEntity<Position> updatePosition(@PathVariable Long id, @RequestBody Map<String,String> body){
         try {
-            Position position = companyService.updatePosition(id, body.get("title"), body.get("description"));
+            // Parse dates if provided
+            LocalDate dateFrom = body.get("dateFrom") != null && !body.get("dateFrom").isEmpty() 
+                ? LocalDate.parse(body.get("dateFrom")) 
+                : null;
+            LocalDate dateTo = body.get("dateTo") != null && !body.get("dateTo").isEmpty() 
+                ? LocalDate.parse(body.get("dateTo")) 
+                : null;
+            
+            Position position = companyService.updatePosition(id, body.get("title"), body.get("description"), dateFrom, dateTo);
             return ResponseEntity.ok(position);
         } catch (RuntimeException e) {
             return ResponseEntity.notFound().build();

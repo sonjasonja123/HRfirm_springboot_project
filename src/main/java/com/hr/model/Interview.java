@@ -35,11 +35,11 @@ public class Interview {
     
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "id_position", nullable = false)
-    @JsonIgnoreProperties({"interviews", "company", "hibernateLazyInitializer", "handler"})
+    @JsonIgnoreProperties({"interviews", "hibernateLazyInitializer", "handler"})
     private Position position;
     
-    @OneToMany(mappedBy = "interview", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    @JsonIgnore
+    @OneToMany(mappedBy = "interview", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @JsonIgnoreProperties({"interview"})
     private List<InterviewRound> interviewRounds = new ArrayList<>();
     
     // Constructors

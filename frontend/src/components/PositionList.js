@@ -14,7 +14,9 @@ const PositionList = () => {
     name: '',
     details: '',
     open: true,
-    company: null
+    company: null,
+    dateFrom: '',
+    dateTo: ''
   });
 
   useEffect(() => {
@@ -71,7 +73,7 @@ const PositionList = () => {
       }
       setShowModal(false);
       setEditingPosition(null);
-      setFormData({ name: '', details: '', open: true, company: null });
+      setFormData({ name: '', details: '', open: true, company: null, dateFrom: '', dateTo: '' });
       loadPositions();
     } catch (error) {
       toast.error('Error saving position');
@@ -85,7 +87,9 @@ const PositionList = () => {
       name: position.name,
       details: position.details,
       open: position.open,
-      company: position.company
+      company: position.company,
+      dateFrom: position.dateFrom || '',
+      dateTo: position.dateTo || ''
     });
     setShowModal(true);
   };
@@ -122,7 +126,7 @@ const PositionList = () => {
   const handleCloseModal = () => {
     setShowModal(false);
     setEditingPosition(null);
-    setFormData({ name: '', details: '', open: true, company: null });
+    setFormData({ name: '', details: '', open: true, company: null, dateFrom: '', dateTo: '' });
   };
 
   const filteredPositions = positions.filter(position => {
@@ -171,6 +175,8 @@ const PositionList = () => {
                 <th>Name</th>
                 <th>Company</th>
                 <th>Details</th>
+                <th>Datum Od</th>
+                <th>Datum Do</th>
                 <th>Status</th>
                 <th>Actions</th>
               </tr>
@@ -181,6 +187,8 @@ const PositionList = () => {
                   <td>{position.name}</td>
                   <td>{position.company?.name}</td>
                   <td>{position.details.length > 50 ? position.details.substring(0, 50) + '...' : position.details}</td>
+                  <td>{position.dateFrom || 'N/A'}</td>
+                  <td>{position.dateTo || 'N/A'}</td>
                   <td>
                     <Badge bg={position.open ? 'success' : 'secondary'}>
                       {position.open ? 'Open' : 'Closed'}
@@ -263,11 +271,41 @@ const PositionList = () => {
                 required
               />
             </Form.Group>
+            <Row>
+              <Col md={6}>
+                <Form.Group className="mb-3">
+                  <Form.Label>Datum Od (Date From)</Form.Label>
+                  <Form.Control
+                    type="date"
+                    name="dateFrom"
+                    value={formData.dateFrom}
+                    onChange={handleInputChange}
+                  />
+                  <Form.Text className="text-muted">
+                    Pozicija će biti zatvorena pre ovog datuma
+                  </Form.Text>
+                </Form.Group>
+              </Col>
+              <Col md={6}>
+                <Form.Group className="mb-3">
+                  <Form.Label>Datum Do (Date To)</Form.Label>
+                  <Form.Control
+                    type="date"
+                    name="dateTo"
+                    value={formData.dateTo}
+                    onChange={handleInputChange}
+                  />
+                  <Form.Text className="text-muted">
+                    Pozicija će biti zatvorena posle ovog datuma
+                  </Form.Text>
+                </Form.Group>
+              </Col>
+            </Row>
             <Form.Group className="mb-3">
               <Form.Check
                 type="checkbox"
                 name="open"
-                label="Position is open"
+                label="Position is open (automatski se ažurira na osnovu datuma)"
                 checked={formData.open}
                 onChange={handleInputChange}
               />

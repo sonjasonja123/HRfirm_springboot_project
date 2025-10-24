@@ -136,4 +136,27 @@ public class InterviewController {
             return ResponseEntity.notFound().build();
         }
     }
+    
+    @PostMapping("/{id}/rounds")
+    public ResponseEntity<Interview> addInterviewRound(
+            @PathVariable Long id, 
+            @RequestParam String type, 
+            @RequestParam Integer number) {
+        try {
+            Interview interview = interviewService.addInterviewRound(id, type, number);
+            return ResponseEntity.ok(interview);
+        } catch (RuntimeException e) {
+            return ResponseEntity.notFound().build();
+        }
+    }
+    
+    @PostMapping("/{id}/hire")
+    public ResponseEntity<Interview> hireCandidate(@PathVariable Long id) {
+        try {
+            Interview interview = interviewService.hireCandidate(id);
+            return ResponseEntity.ok(interview);
+        } catch (RuntimeException e) {
+            return ResponseEntity.badRequest().build();
+        }
+    }
 }

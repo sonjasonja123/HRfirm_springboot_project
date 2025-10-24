@@ -171,6 +171,38 @@ const InterviewList = () => {
     setShowRoundModal(true);
   };
 
+  const handleHireCandidate = async (interview) => {
+    if (window.confirm(`Da li ste sigurni da želite da zaposlite ${interview.candidate?.name} ${interview.candidate?.surname}?\n\nOvo će:\n- Zatvoriti poziciju\n- Automatski odbiti sve ostale kandidate za ovu poziciju`)) {
+      try {
+        // Prvo zaposli kandidata kroz backend endpoint koji automatski zatvara poziciju i odbija ostale
+        await interviewAPI.hireCandidate(interview.idInterview);
+        toast.success('Kandidat je uspešno zaposlen! Pozicija je zatvorena i ostali kandidati su odbijeni.');
+        loadInterviews();
+        loadCandidates(); // Osveži listu kandidata
+      } catch (error) {
+        toast.error('Greška pri zapošljavanju kandidata');
+        console.error('Error hiring candidate:', error);
+      }
+    }
+  };
+
+  const handleRejectCandidate = async (interview) => {
+    if (window.confirm(`Da li ste sigurni da želite da odbijete ${interview.candidate?.name} ${interview.candidate?.surname}?`)) {
+      try {
+        // Postavi status kandidata na Rejected
+        await candidateAPI.updateStatus(interview.candidate.idCandidate, 'Rejected');
+        // Otkaži intervju
+        await interviewAPI.updateStatus(interview.idInterview, 'Canceled');
+        toast.success('Kandidat je odbijen.');
+        loadInterviews();
+        loadCandidates(); // Osveži listu kandidata
+      } catch (error) {
+        toast.error('Greška pri odbijanju kandidata');
+        console.error('Error rejecting candidate:', error);
+      }
+    }
+  };
+
   const handleCloseModal = () => {
     setShowModal(false);
     setEditingInterview(null);
@@ -311,6 +343,24 @@ const InterviewList = () => {
                       Add Round
                     </Button>
                     <Button
+                      variant="success"
+                      size="sm"
+                      className="ms-2"
+                      onClick={() => handleHireCandidate(interview)}
+                      disabled={interview.status !== 'Completed' || interview.position?.open === false}
+                    >
+                      Hire
+                    </Button>
+                    <Button
+                      variant="warning"
+                      size="sm"
+                      className="ms-2"
+                      onClick={() => handleRejectCandidate(interview)}
+                      disabled={interview.status !== 'Completed'}
+                    >
+                      Reject
+                    </Button>
+                    <Button
                       variant="outline-danger"
                       size="sm"
                       className="ms-2"
@@ -359,7 +409,7 @@ const InterviewList = () => {
                 required
               >
                 <option value="">Select a position</option>
-                {positions.map((position) => (
+                {positions.filter(p => p.open).map((position) => (
                   <option key={position.idPosition} value={position.idPosition}>
                     {position.name} - {position.company?.name}
                   </option>

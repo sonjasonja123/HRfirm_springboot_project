@@ -1,6 +1,7 @@
 package com.hr.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
@@ -26,8 +27,9 @@ public class Company {
     @Column(name = "industry", nullable = false)
     private String industry;
 
+    @NotBlank(message = "PIB is required")
     @Size(max = 50, message = "PIB must not exceed 50 characters")
-    @Column(name = "pib", length = 50)
+    @Column(name = "pib", nullable = false, length = 50)
     private String pib;
 
     @Size(max = 100, message = "Contact must not exceed 100 characters")
@@ -40,8 +42,8 @@ public class Company {
     @Column(name = "password")
     private String password;
     
-    @OneToMany(mappedBy = "company", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    @JsonIgnore
+    @OneToMany(mappedBy = "company", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @JsonIgnoreProperties({"company", "interviews"})
     private List<Position> positions = new ArrayList<>();
     
     // Constructors

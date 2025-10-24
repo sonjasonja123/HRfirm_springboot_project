@@ -9,6 +9,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
@@ -75,11 +76,15 @@ public class CompanyService {
     }
 
     // Position management methods
-    public Position postPosition(Company company, String title, String description) {
+    public Position postPosition(Company company, String title, String description, LocalDate dateFrom, LocalDate dateTo) {
         Position position = new Position();
         position.setName(title);
         position.setDetails(description);
         position.setCompany(company);
+        position.setDateFrom(dateFrom);
+        position.setDateTo(dateTo);
+        // Automatically update status based on dates if dates are provided
+        position.updateOpenStatusByDates();
         return positionRepository.save(position);
     }
 
@@ -87,12 +92,16 @@ public class CompanyService {
         return positionRepository.findByCompanyId(company.getIdCompany());
     }
     
-    public Position updatePosition(Long positionId, String title, String description) {
+    public Position updatePosition(Long positionId, String title, String description, LocalDate dateFrom, LocalDate dateTo) {
         Optional<Position> optionalPosition = positionRepository.findById(positionId);
         if (optionalPosition.isPresent()) {
             Position position = optionalPosition.get();
             position.setName(title);
             position.setDetails(description);
+            position.setDateFrom(dateFrom);
+            position.setDateTo(dateTo);
+            // Automatically update status based on dates if dates are provided
+            position.updateOpenStatusByDates();
             return positionRepository.save(position);
         }
         throw new RuntimeException("Position not found with id: " + positionId);

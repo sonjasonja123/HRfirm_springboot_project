@@ -202,6 +202,7 @@ const CompanyList = () => {
                     name="pib"
                     value={formData.pib}
                     onChange={handleInputChange}
+                    required
                   />
                 </Form.Group>
               </Col>

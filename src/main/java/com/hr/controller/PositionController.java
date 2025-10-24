@@ -123,4 +123,15 @@ public class PositionController {
             return ResponseEntity.notFound().build();
         }
     }
+    
+    @PutMapping("/update-status-by-dates")
+    public ResponseEntity<String> updateAllPositionStatusesByDates() {
+        try {
+            positionService.updateAllPositionStatusesByDates();
+            return ResponseEntity.ok("All position statuses updated based on dates");
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("Error updating position statuses: " + e.getMessage());
+        }
+    }
 }

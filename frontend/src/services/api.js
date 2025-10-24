@@ -68,6 +68,7 @@ export const interviewAPI = {
   updateStatus: (id, status) => api.put(`/interviews/${id}/status?status=${status}`),
   addRound: (interviewId, type, number) => 
     api.post(`/interviews/${interviewId}/rounds?type=${type}&number=${number}`),
+  hireCandidate: (interviewId) => api.post(`/interviews/${interviewId}/hire`),
   getRounds: (interviewId) => api.get(`/interviews/${interviewId}/rounds`),
   getRoundsByType: (type) => api.get(`/interviews/rounds/type/${type}`),
   deleteRound: (roundId) => api.delete(`/interviews/rounds/${roundId}`),
